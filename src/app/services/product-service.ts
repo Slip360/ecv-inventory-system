@@ -34,6 +34,10 @@ export class ProductService {
     return invoke<ProductDto[]>('get_products');
   }
 
+  public async getProductsWithoutStock() {
+    return invoke<ProductDto[]>('get_products_without_stock');
+  }
+
   public updateProduct(product: UpdateProductDto) {
     return invoke<ProductDto>('update_product', { payload: product });
   }
