@@ -12,6 +12,11 @@ const childRoutes: Routes = [
         title: 'Productos'
     },
     {
+        path: 'inventories',
+        loadComponent: () => import('./pages/inventory-page/inventory-page').then(m => m.InventoryPage),
+        title: 'Inventarios'
+    },
+    {
         path: '**',
         redirectTo: '/home',
         pathMatch: 'full'

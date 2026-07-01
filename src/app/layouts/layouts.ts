@@ -16,7 +16,8 @@ export class Layouts {
 
   protected readonly menubarItems: MenuItem[] = [
     { label: 'Inicio', routerLink: '/home' },
-    { label: 'Productos', routerLink: '/products' }
+    { label: 'Productos', routerLink: '/products' },
+    { label: 'Inventarios', routerLink: '/inventories' },
   ];
 
 }
