@@ -29,7 +29,6 @@ pub async fn get_products(state: State<'_, DbState>) -> Result<Vec<product::Mode
 }
 
 #[tauri::command]
-
 pub async fn update_product(
     state: State<'_, DbState>,
     payload: UpdateProductDto,
