@@ -1,5 +1,5 @@
 <div class="flex justify-content-end">
-    <p-menubar [model]="menubarItems" />
+    <p-menubar [model]="menubarItems()" />
 </div>
 <div class="mt-4">
     <p-table [value]="products()" selectionMode="single" (selectionChange)="onSelectedProductChange($event)"

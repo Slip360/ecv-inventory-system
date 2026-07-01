@@ -1,8 +1,11 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { TableModule } from 'primeng/table';
 import { ProductDto, ProductService } from '../../services/product-service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ProductCreationModal } from './components/product-creation-modal/product-creation-modal';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-page',
@@ -10,27 +13,39 @@ import { ProductDto, ProductService } from '../../services/product-service';
     MenubarModule,
     TableModule
   ],
+  providers: [
+    DialogService
+  ],
   templateUrl: './product-page.html',
   styleUrl: './product-page.css',
 })
-export class ProductPage implements OnInit {
+export class ProductPage implements OnInit, OnDestroy {
 
   private readonly _productService = inject(ProductService);
 
+  private readonly _dialogService = inject(DialogService);
+
   private readonly _selectedProduct = signal<ProductDto | null>(null);
+
+  private readonly _subscriptions: Subscription[] = [];
 
   protected readonly products = signal<ProductDto[]>([]);
 
-  protected get menubarItems(): MenuItem[] {
+  protected readonly menubarItems = computed<MenuItem[]>(() => {
+    const isEmpty = this.isSelectedProductEmpty;
     return [
-      { label: 'Crear' },
-      { label: 'Editar', disabled: this.isSelectedProductEmpty },
-      { label: 'Eliminar', disabled: this.isSelectedProductEmpty }
+      { label: 'Crear', command: () => this.onCreate() },
+      { label: 'Editar', disabled: isEmpty },
+      { label: 'Eliminar', disabled: isEmpty }
     ];
-  }
+  })
 
   ngOnInit(): void {
     this.loadProducts();
+  }
+
+  ngOnDestroy(): void {
+    this._subscriptions.forEach(s => s.unsubscribe());
   }
 
   private loadProducts(): void {
@@ -38,9 +53,20 @@ export class ProductPage implements OnInit {
       .then(result => this.products.set(result));
   }
 
+  protected onCreate(): void {
+    const ref = this._dialogService.open(ProductCreationModal, { header: 'Crear producto' });
+    if (ref === null || ref === undefined) return;
+    const subscription = ref.onClose.subscribe({
+      next: (result: boolean) => {
+        if (!result) return;
+        this.loadProducts();
+      }
+    });
+    this._subscriptions.push(subscription);
+  }
+
   protected onSelectedProductChange(product: ProductDto): void {
     this._selectedProduct.set(product);
-    console.log(this._selectedProduct());
   }
 
   protected get isSelectedProductEmpty(): boolean {
