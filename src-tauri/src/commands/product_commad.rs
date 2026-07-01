@@ -1,7 +1,7 @@
 use crate::dtos::product_dtos::CreateProductDto;
-use crate::entities::product;
+use crate::entities::{product, stock};
 use crate::{database::init::DbState, dtos::product_dtos::UpdateProductDto};
-use sea_orm::{ActiveModelTrait, EntityTrait, Set};
+use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, Set};
 use tauri::State;
 
 #[tauri::command]
@@ -23,6 +23,18 @@ pub async fn create_product(
 pub async fn get_products(state: State<'_, DbState>) -> Result<Vec<product::Model>, String> {
     let db = &state.0;
     product::Entity::find()
+        .all(db)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn get_products_without_stock(
+    state: State<'_, DbState>,
+) -> Result<Vec<product::Model>, String> {
+    let db = &state.0;
+    product::Entity::find()
+        .filter(stock::Column::ProductId.is_null())
         .all(db)
         .await
         .map_err(|e| e.to_string())

@@ -2,7 +2,7 @@ use std::{fs, path::PathBuf};
 
 use sea_orm::{ConnectionTrait, Database, DatabaseConnection, Schema};
 
-use crate::entities::product;
+use crate::entities::{product, stock};
 
 pub struct DbState(pub DatabaseConnection);
 
@@ -20,8 +20,16 @@ pub async fn init_db(mut data_dir: PathBuf) -> DatabaseConnection {
             .create_table_from_entity(product::Entity)
             .if_not_exists(),
     );
+    let stmt_stock = builder.build(
+        schema
+            .create_table_from_entity(stock::Entity)
+            .if_not_exists(),
+    );
     db.execute(stmt_product)
         .await
         .expect("Error al crear la tabla de productos");
+    db.execute(stmt_stock)
+        .await
+        .expect("Error al crear la tabla de stocks");
     db
 }
