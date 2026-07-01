@@ -14,6 +14,13 @@ export interface ProductDto {
   price: number;
 }
 
+export interface UpdateProductDto {
+  id: number;
+  name: string;
+  unit_of_measurement: string;
+  price: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -25,6 +32,10 @@ export class ProductService {
 
   public getProducts() {
     return invoke<ProductDto[]>('get_products');
+  }
+
+  public updateProduct(product: UpdateProductDto) {
+    return invoke<ProductDto>('update_product', { payload: product });
   }
 
 }

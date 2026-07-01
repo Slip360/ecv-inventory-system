@@ -1,0 +1,31 @@
+@if (form !== null) {
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="grid p-2">
+        <div class="col-12">
+            <p-floatlabel variant="on">
+                <input type="text" pInputText id="name" aria-describedby="name-help" formControlName="name"
+                    class="w-full" />
+                <label for="name">Nombre</label>
+            </p-floatlabel>
+        </div>
+        <div class="col-12">
+            <p-floatlabel variant="on">
+                <input type="text" pInputText id="unit_of_measurement" aria-describedby="unit_of_measurement-help"
+                    formControlName="unit_of_measurement" class="w-full" />
+                <label for="unit_of_measurement">Unidad de medida</label>
+            </p-floatlabel>
+        </div>
+        <div class="col-12">
+            <p-floatlabel variant="on">
+                <input type="number" pInputText id="price" aria-describedby="price-help" formControlName="price"
+                    class="w-full" />
+                <label for="price">Precio</label>
+            </p-floatlabel>
+        </div>
+        <div class="col flex justify-content-between">
+            <p-button type="button" label="Cancelar" severity="danger" (onClick)="onClose()" />
+            <p-button type="submit" label="Guardar" severity="success" />
+        </div>
+    </div>
+</form>
+}
