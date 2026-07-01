@@ -1,0 +1,9 @@
+<div class="flex flex-column h-screen overflow-hidden">
+    <header class="w-full flex-order-0">
+        <p-menubar [model]="menubarItems" />
+    </header>
+
+    <main class="flex-grow-1 overflow-y-auto p-4">
+        <router-outlet />
+    </main>
+</div>
