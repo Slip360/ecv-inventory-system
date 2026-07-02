@@ -7,17 +7,19 @@
         <ng-template #header>
             <tr>
                 <th>Id</th>
-                <th>Nombre</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
                 <th>Unidad de medida</th>
                 <th>Precio</th>
             </tr>
         </ng-template>
-        <ng-template #body let-product>
-            <tr [pSelectableRow]="product">
-                <td>{{ product.id }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.unit_of_measurement }}</td>
-                <td>{{ product.price }}</td>
+        <ng-template #body let-stock>
+            <tr [pSelectableRow]="stock">
+                <td>{{ stock.id }}</td>
+                <td>{{ stock.product.name }}</td>
+                <td>{{ stock.stock.quantity }}</td>
+                <td>{{ stock.product.unit_of_measurement }}</td>
+                <td>{{ stock.product.price }}</td>
             </tr>
         </ng-template>
     </p-table>

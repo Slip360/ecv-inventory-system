@@ -1,9 +1,9 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MenubarModule } from 'primeng/menubar';
 import { TableModule } from 'primeng/table';
-import { StockDto } from '../../services/stock-service';
+import { StockService, StockWithProductDto } from '../../services/stock-service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -18,13 +18,17 @@ import { Subscription } from 'rxjs';
   templateUrl: './inventory-page.html',
   styleUrl: './inventory-page.css',
 })
-export class InventoryPage {
+export class InventoryPage implements OnInit, OnDestroy {
 
-  private readonly _selectedStock = signal<StockDto | null>(null);
+  private readonly _stockService = inject(StockService);
+
+  private readonly _dialogService = inject(DialogService);
+
+  private readonly _selectedStock = signal<StockWithProductDto | null>(null);
 
   private readonly _subscriptions: Subscription[] = [];
 
-  protected readonly stocks = signal<StockDto[]>([]);
+  protected readonly stocks = signal<StockWithProductDto[]>([]);
 
   protected readonly menubarItems = computed<MenuItem[]>(() => {
     const isEmpty = this._isSelectedStockEmpty;
@@ -35,7 +39,20 @@ export class InventoryPage {
     ];
   });
 
-  protected onSelectedStockChange(stock: StockDto): void {
+  ngOnInit(): void {
+    this.loadStocks();
+  }
+
+  ngOnDestroy(): void {
+    this._subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  private loadStocks(): void {
+    this._stockService.getStocks()
+      .then(result => this.stocks.set(result));
+  }
+
+  protected onSelectedStockChange(stock: StockWithProductDto): void {
     this._selectedStock.set(stock);
   }
 

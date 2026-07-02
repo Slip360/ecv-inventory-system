@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
+import { ProductDto } from './product-service';
 
 export interface CreateStockDto {
   product_id: number;
@@ -10,6 +11,11 @@ export interface StockDto {
   id: number;
   product_id: number;
   quantity: number;
+}
+
+export interface StockWithProductDto {
+  stock: StockDto;
+  product: ProductDto;
 }
 
 export interface UpdateStockDto {
@@ -27,7 +33,7 @@ export class StockService {
   }
 
   public getStocks() {
-    return invoke<StockDto[]>('get_stocks');
+    return invoke<StockWithProductDto[]>('get_stocks');
   }
 
   public updateStock(stock: UpdateStockDto) {

@@ -1,6 +1,6 @@
 use crate::database::init::DbState;
-use crate::dtos::stock_dtos::{CreateStockDto, UpdateStockDto};
-use crate::entities::stock;
+use crate::dtos::stock_dtos::{CreateStockDto, StockWithProductDto, UpdateStockDto};
+use crate::entities::{product, stock};
 use sea_orm::{ActiveModelTrait, EntityTrait, Set};
 use tauri::State;
 
@@ -19,12 +19,18 @@ pub async fn create_stock(
 }
 
 #[tauri::command]
-pub async fn get_stocks(state: State<'_, DbState>) -> Result<Vec<stock::Model>, String> {
+pub async fn get_stocks(state: State<'_, DbState>) -> Result<Vec<StockWithProductDto>, String> {
     let db = &state.0;
-    stock::Entity::find()
+    let records: Vec<(stock::Model, Option<product::Model>)> = stock::Entity::find()
+        .find_also_related(product::Entity)
         .all(db)
         .await
-        .map_err(|e| e.to_string())
+        .map_err(|e| e.to_string())?;
+    let result = records
+        .into_iter()
+        .map(|(stock, product)| StockWithProductDto { stock, product })
+        .collect();
+    Ok(result)
 }
 
 #[tauri::command]
