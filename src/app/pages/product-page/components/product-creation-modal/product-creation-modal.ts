@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DialogModule } from 'primeng/dialog';
 import { CreateProductDto, ProductService } from '../../../../services/product-service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,7 +9,6 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 @Component({
   selector: 'app-product-creation-modal',
   imports: [
-    DialogModule,
     InputTextModule,
     FloatLabelModule,
     ButtonModule,

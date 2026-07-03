@@ -1,0 +1,23 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="grid p-2">
+        <div class="col-12">
+            <p-floatlabel variant="on">
+                <p-cascadeselect [options]="$any(products())" formControlName="product_id" optionLabel="name"
+                    optionValue="id" class="w-full">
+                </p-cascadeselect>
+                <label for="product_id">Id del producto</label>
+            </p-floatlabel>
+        </div>
+        <div class="col-12">
+            <p-floatlabel variant="on">
+                <input type="number" pInputText id="quantity" aria-describedby="quantity-help"
+                    formControlName="quantity" class="w-full" />
+                <label for="quantity">Cantidad</label>
+            </p-floatlabel>
+        </div>
+        <div class="col flex justify-content-between">
+            <p-button type="button" label="Cancelar" severity="danger" (onClick)="onClose()" />
+            <p-button type="submit" label="Guardar" severity="success" />
+        </div>
+    </div>
+</form>

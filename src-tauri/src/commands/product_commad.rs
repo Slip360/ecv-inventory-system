@@ -34,7 +34,8 @@ pub async fn get_products_without_stock(
 ) -> Result<Vec<product::Model>, String> {
     let db = &state.0;
     product::Entity::find()
-        .filter(stock::Column::ProductId.is_null())
+        .left_join(stock::Entity)
+        .filter(stock::Column::Id.is_null())
         .all(db)
         .await
         .map_err(|e| e.to_string())

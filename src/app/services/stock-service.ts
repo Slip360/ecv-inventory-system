@@ -14,7 +14,9 @@ export interface StockDto {
 }
 
 export interface StockWithProductDto {
-  stock: StockDto;
+  id: number;
+  product_id: number;
+  quantity: number;
   product: ProductDto;
 }
 

@@ -5,6 +5,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { TableModule } from 'primeng/table';
 import { StockService, StockWithProductDto } from '../../services/stock-service';
 import { Subscription } from 'rxjs';
+import { InventoryCreationModal } from './components/inventory-creation-modal/inventory-creation-modal';
 
 @Component({
   selector: 'app-inventory-page',
@@ -33,7 +34,7 @@ export class InventoryPage implements OnInit, OnDestroy {
   protected readonly menubarItems = computed<MenuItem[]>(() => {
     const isEmpty = this._isSelectedStockEmpty;
     return [
-      { label: 'Agregar stock' },
+      { label: 'Crear', command: () => this.onCreate() },
       { label: 'Editar', disabled: isEmpty },
       { label: 'Eliminar', disabled: isEmpty }
     ];
@@ -49,7 +50,19 @@ export class InventoryPage implements OnInit, OnDestroy {
 
   private loadStocks(): void {
     this._stockService.getStocks()
-      .then(result => this.stocks.set(result));
+      .then(result => { this.stocks.set(result); console.log(result) });
+  }
+
+  protected onCreate(): void {
+    const ref = this._dialogService.open(InventoryCreationModal, { header: 'Crear stock' });
+    if (ref === null || ref === undefined) return;
+    const subscription = ref.onClose.subscribe({
+      next: (result: boolean) => {
+        if (!result) return;
+        this.loadStocks();
+      }
+    });
+    this._subscriptions.push(subscription);
   }
 
   protected onSelectedStockChange(stock: StockWithProductDto): void {
