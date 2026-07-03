@@ -1,1 +1,24 @@
-<p>inventory-update-modal works!</p>
+@if (form !== null) {
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="grid p-2">
+        <div class="col-12">
+            <p-floatlabel variant="on">
+                <input type="text" pInputText id="product_name" class="w-full" [value]="selectedProductName"
+                    [readOnly]="true" />
+                <label for="product_name">Producto</label>
+            </p-floatlabel>
+        </div>
+        <div class="col-12">
+            <p-floatlabel variant="on">
+                <input type="number" pInputText id="quantity" aria-describedby="quantity-help"
+                    formControlName="quantity" class="w-full" />
+                <label for="quantity">Cantidad</label>
+            </p-floatlabel>
+        </div>
+        <div class="col flex justify-content-between">
+            <p-button type="button" label="Cancelar" severity="danger" (onClick)="onClose()" />
+            <p-button type="submit" label="Guardar" severity="success" />
+        </div>
+    </div>
+</form>
+}

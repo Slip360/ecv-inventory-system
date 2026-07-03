@@ -1,6 +1,7 @@
 use crate::database::init::DbState;
 use crate::dtos::stock_dtos::{CreateStockDto, StockWithProductDto, UpdateStockDto};
 use crate::entities::{product, stock};
+use sea_orm::ActiveValue::NotSet;
 use sea_orm::{ActiveModelTrait, EntityTrait, Set};
 use tauri::State;
 
@@ -41,6 +42,7 @@ pub async fn update_stock(
     let new_stock = stock::ActiveModel {
         quantity: Set(payload.quantity),
         id: Set(payload.id),
+        product_id: NotSet,
         ..Default::default()
     };
     let db = &state.0;

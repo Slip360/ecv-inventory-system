@@ -6,6 +6,7 @@ import { TableModule } from 'primeng/table';
 import { StockService, StockWithProductDto } from '../../services/stock-service';
 import { Subscription } from 'rxjs';
 import { InventoryCreationModal } from './components/inventory-creation-modal/inventory-creation-modal';
+import { InventoryUpdateModal } from './components/inventory-update-modal/inventory-update-modal';
 
 @Component({
   selector: 'app-inventory-page',
@@ -35,7 +36,7 @@ export class InventoryPage implements OnInit, OnDestroy {
     const isEmpty = this._isSelectedStockEmpty;
     return [
       { label: 'Crear', command: () => this.onCreate() },
-      { label: 'Editar', disabled: isEmpty },
+      { label: 'Editar', command: () => this.onUpdate(), disabled: isEmpty },
       { label: 'Eliminar', disabled: isEmpty }
     ];
   });
@@ -55,6 +56,23 @@ export class InventoryPage implements OnInit, OnDestroy {
 
   protected onCreate(): void {
     const ref = this._dialogService.open(InventoryCreationModal, { header: 'Crear stock' });
+    if (ref === null || ref === undefined) return;
+    const subscription = ref.onClose.subscribe({
+      next: (result: boolean) => {
+        if (!result) return;
+        this.loadStocks();
+      }
+    });
+    this._subscriptions.push(subscription);
+  }
+
+  protected onUpdate(): void {
+    const stock = this._selectedStock();
+    if (stock === null) return;
+    const ref = this._dialogService.open(InventoryUpdateModal, {
+      header: 'Actualizar stock',
+      data: { stock }
+    });
     if (ref === null || ref === undefined) return;
     const subscription = ref.onClose.subscribe({
       next: (result: boolean) => {
