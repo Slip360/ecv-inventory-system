@@ -17,6 +17,11 @@ const childRoutes: Routes = [
         title: 'Inventarios'
     },
     {
+        path: 'entries-outputs',
+        loadComponent: () => import('./pages/entries-outputs-page/entries-outputs-page').then(m => m.EntriesOutputsPage),
+        title: 'Entradas/Salidas'
+    },
+    {
         path: '**',
         redirectTo: '/home',
         pathMatch: 'full'
